@@ -1,0 +1,10 @@
+name: McInfoSpigot
+version: '${project.version}'
+main: org.emeraldcraft.mcinfospigot.MCInfo
+api-version: 1.17
+prefix: McInfo
+authors: [ EmerqldWIther ]
+description: The bridge needed for the McINFO bot to work.
+commands:
+  dc:
+  discordchat:

@@ -1,0 +1,19 @@
+bot-token: "coolbottoken"
+#server-name - The name of your minecraft server
+server-name: "My Cool Minecraft Server"
+# Bot-channel - Which channel should the bot alert server activity.
+bot-channel : "bots"
+#bot-logs - The channel where the bots will post any kind of logs.
+bot-logs-channel: "bot-logs"
+
+#mc-execute-enabled: Determines if users can use /mcserver execute <command> and run any command as console.
+mcexecute-enabled: false
+# MySQL Connection Settings
+# Using the JDBC Driver
+mysql:
+  enabled: false
+  database-url: "database.website.com"
+  database-port: 3306
+  database-name: "McINFO"
+  database-username: "root"
+  database-password: "password"
