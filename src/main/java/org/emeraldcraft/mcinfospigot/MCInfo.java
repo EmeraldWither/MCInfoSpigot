@@ -92,7 +92,7 @@ public final class MCInfo extends JavaPlugin {
         Bukkit.getServer().getScheduler().runTask(this, new Runnable() {
             @Override
             public void run() {
-                chat("The server has come online!", Color.CYAN);
+                chat("The server has come online!", Color.GREEN);
                 MCInfo.getDatabase().updateServerInfo(true);
             }
         });
@@ -131,7 +131,7 @@ public final class MCInfo extends JavaPlugin {
         }
     }
     public static FileConfiguration getFileConfig(){
-        return JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig();
+        return MCInfo.getFileConfig();
     }
 
 }

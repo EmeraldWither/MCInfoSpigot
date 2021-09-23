@@ -20,7 +20,7 @@ public class McExecuteCommand extends ListenerAdapter {
     public void onSlashCommand(SlashCommandEvent event){
         if(event.getSubcommandName() != null) {
             if (event.getSubcommandName().equalsIgnoreCase("execute")) {
-                if(!JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getBoolean("mcexecute-enabled")){
+                if(!MCInfo.getFileConfig().getBoolean("mcexecute-enabled")){
                     Bukkit.getScheduler().runTask(JavaPlugin.getProvidingPlugin(MCInfo.class), new Runnable() {
                         @Override
                         public void run() {
@@ -50,7 +50,7 @@ public class McExecuteCommand extends ListenerAdapter {
                     }
                 });
                 for (TextChannel textChannel : MCInfo.getBot().getTextChannels()) {
-                    if (textChannel.getName().equalsIgnoreCase(JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("bot-logs-channel"))) {
+                    if (textChannel.getName().equalsIgnoreCase(MCInfo.getFileConfig().getString("bot-logs-channel"))) {
                         textChannel.sendMessage("User **'" + event.getUser().getName() + "'** has executed the command **'" + Objects.requireNonNull(event.getOption("command")).getAsString() + "'**!").queue();
                         break;
                     }

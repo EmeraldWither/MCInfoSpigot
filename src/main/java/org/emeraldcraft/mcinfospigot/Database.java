@@ -151,7 +151,7 @@ public class Database {
 
                 String sqlUpdateServerName = "update serverinfo set serverName = ?;";
                 PreparedStatement updateServerName = connection.prepareStatement(sqlUpdateServerName);
-                updateServerName.setString(1, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
+                updateServerName.setString(1, MCInfo.getFileConfig().getString("server-name"));
                 updateServerName.executeUpdate();
 
                 hasData = true;
@@ -164,7 +164,7 @@ public class Database {
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
                 stmt.setInt(5, (int)Bukkit.getTPS()[0]);
-                stmt3.setString(6, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
+                stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }
 
@@ -211,7 +211,7 @@ public class Database {
                 stmt3.setInt(2, maxPlayers);
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
-                stmt3.setString(6, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
+                stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }
 
