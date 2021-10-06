@@ -131,7 +131,7 @@ public final class MCInfo extends JavaPlugin {
         }
     }
     public static FileConfiguration getFileConfig(){
-        return MCInfo.getFileConfig();
+        return JavaPlugin.getPlugin(MCInfo.class).getConfig();
     }
 
 }

@@ -55,7 +55,7 @@ public class McExecuteCommand extends ListenerAdapter {
                         break;
                     }
                 }
-                event.reply(new MessageBuilder(":white_check_mark: Successfully ran the command!").build()).setEphemeral(true).queue();
+                event.reply(new MessageBuilder(":white_check_mark: Successfully ran the command!").build()).queue();
             }
         }
     }
