@@ -3,7 +3,9 @@ package org.emeraldcraft.mcinfospigot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -23,6 +25,7 @@ import org.emeraldcraft.mcinfospigot.Listeners.JDA.McExecuteCommand;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public final class MCInfo extends JavaPlugin {
@@ -82,18 +85,18 @@ public final class MCInfo extends JavaPlugin {
             e.printStackTrace();
         }
         // Plugin startup logic
-        Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                MCInfo.getDatabase().updateTPS(true);
-            }
-        }, 1, (10 * 20));
 
         Bukkit.getServer().getScheduler().runTask(this, new Runnable() {
             @Override
             public void run() {
                 chat("The server has come online!", Color.GREEN);
                 MCInfo.getDatabase().updateServerInfo(true);
+                Bukkit.getScheduler().scheduleAsyncRepeatingTask(MCInfo.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        MCInfo.getDatabase().updateTPS(true);
+                    }
+                }, 1, (10 * 20));
             }
         });
 
@@ -104,6 +107,7 @@ public final class MCInfo extends JavaPlugin {
     @Override
     public void onDisable() {
         if(Bukkit.isStopping()) {
+            Bukkit.getScheduler().cancelTasks(this);
             chat("Server is shutting down!", Color.RED);
             MCInfo.getDatabase().updateServerInfo(false);
             MCInfo.getDatabase().closeConnection();
@@ -125,9 +129,21 @@ public final class MCInfo extends JavaPlugin {
                         embedBuilder.setColor(color);
                         embedBuilder.setTitle(msg);
                         embedBuilder.setFooter("Made by EmerqldWither");
-                channel.sendMessageEmbeds(embedBuilder.build()).queue();
+                if(Objects.requireNonNull(getFileConfig().getString("roleid")).equalsIgnoreCase("0")){
+                    Bukkit.getLogger().log(Level.SEVERE, "THE ROLE ID = 0. SENDING IT AS NORMAL");
+                    channel.sendMessageEmbeds(embedBuilder.build()).queue();
+                    return;
+                }
+                String roleID = getFileConfig().getString("roleid");;
+                if(roleID == null){
+                    Bukkit.getLogger().log(Level.SEVERE, "Your roleID is incorrect. Unable to send the message.");
+                }
+                MessageBuilder messageBuilder = new MessageBuilder(Objects.requireNonNull(channel.getGuild().getRoleById(roleID)).getAsMention()).setEmbeds(embedBuilder.build());
+                Bukkit.getLogger().log(Level.SEVERE, "THE ROLE ID IS NOT = 0. SENDING IT AS PING");
+                assert roleID != null;
+                channel.sendMessage(messageBuilder.build()).mentionRoles(roleID).queue();
+                break;
             }
-
         }
     }
     public static FileConfiguration getFileConfig(){

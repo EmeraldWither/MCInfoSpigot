@@ -8,6 +8,10 @@ bot-logs-channel: "bot-logs"
 
 #mc-execute-enabled: Determines if users can use /mcserver execute <command> and run any command as console.
 mcexecute-enabled: false
+
+# The bot can automatically ping people when players leave/join and on server startup/shutdown.
+# Put as 0 for it to not auto ping people
+roleid: 0
 # MySQL Connection Settings
 # Using the JDBC Driver
 mysql:

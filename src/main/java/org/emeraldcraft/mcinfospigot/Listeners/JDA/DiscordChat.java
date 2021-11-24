@@ -14,11 +14,11 @@ public class DiscordChat extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getChannel().getName().equalsIgnoreCase(JavaPlugin.getPlugin(MCInfo.class).getConfig().getString("bot-channel"))) {
-            if (event.getAuthor().isBot() || event.getAuthor().getAsTag().equalsIgnoreCase(MCInfo.getBot().getSelfUser().getAsTag())) {
+            if (event.getAuthor().isBot()) {
                 return;
             }
             Color color = new Color(255, 255, 255);
-            if(event.getMember() != null || event.getMember().getColor() != null){
+            if(event.getMember() != null && event.getMember().getColor() != null){
                 color = event.getMember().getColor();
             }
             if(color == null){

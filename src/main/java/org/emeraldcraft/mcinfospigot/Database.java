@@ -116,14 +116,12 @@ public class Database {
                 openConnection();
             }
             Connection connection = getConnection();
-            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), motd varchar(69), tps integer(3), serverName varchar(1000));";
+            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
             String sqlins = "insert into serverinfo(onlinePlayers, maxPlayers, isOnline, mcVersion, tps, serverName) values(?, ?, ?, ?, ?, ?);";
             String sqlSelect = "SELECT * from serverinfo;";
 
-            // Create table
-            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
-            stmt.executeUpdate();
 
+            connection.prepareStatement(sqlcreateTable).execute();
 
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
             ResultSet results = stmt2.executeQuery();
@@ -154,6 +152,11 @@ public class Database {
                 updateServerName.setString(1, MCInfo.getFileConfig().getString("server-name"));
                 updateServerName.executeUpdate();
 
+                String sqlUpdateTPS = "update serverinfo set serverName = ?;";
+                PreparedStatement updateTPS = connection.prepareStatement(sqlUpdateTPS);
+                updateTPS.setInt(1, (int)Bukkit.getTPS()[0]);
+                updateTPS.executeUpdate();
+
                 hasData = true;
             }
             if (!hasData) {
@@ -163,7 +166,7 @@ public class Database {
                 stmt3.setInt(2, maxPlayers);
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
-                stmt.setInt(5, (int)Bukkit.getTPS()[0]);
+                stmt3.setInt(5, (int)Bukkit.getTPS()[0]);
                 stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }
@@ -183,13 +186,13 @@ public class Database {
                 openConnection();
             }
             Connection connection = getConnection();
-            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), motd varchar(69), tps integer(3), serverName varchar(1000));";
+            String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
             String sqlins = "insert into serverinfo(onlinePlayers, maxPlayers, isOnline, mcVersion, tps, serverName) values(?, ?, ?, ?, ?, ?);";
             String sqlSelect = "SELECT * from serverinfo";
 
             // Create table
             PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
-            stmt.executeUpdate();
+            stmt.execute();
 
 
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
@@ -205,12 +208,11 @@ public class Database {
             }
             if(!hasData){
                 PreparedStatement stmt3 = connection.prepareStatement(sqlins);
-                stmt.setInt(5, (int)Bukkit.getTPS()[0]);
-
                 stmt3.setInt(1, onlinePlayers);
                 stmt3.setInt(2, maxPlayers);
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
+                stmt.setInt(5, (int)Bukkit.getTPS()[0]);
                 stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }

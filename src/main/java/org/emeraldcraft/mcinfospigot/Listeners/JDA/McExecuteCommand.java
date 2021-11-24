@@ -2,7 +2,6 @@ package org.emeraldcraft.mcinfospigot.Listeners.JDA;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -27,7 +26,7 @@ public class McExecuteCommand extends ListenerAdapter {
                             EmbedBuilder embedBuilder = new EmbedBuilder();
                             embedBuilder.setAuthor(JavaPlugin.getPlugin(MCInfo.class).getConfig().getString("server-name"));
                             embedBuilder.setColor(Color.RED);
-                            embedBuilder.setTitle(":no_entry_sign: Sorry, but this feature has been disabled by the server administrators! :no_entry_sign:");
+                            embedBuilder.setTitle(":no_entry_sign: Sorry, but this feature has been disabled by the server administrators! :no_entry_sign:\n Please talk to the server admins if you would like to ");
                             embedBuilder.setFooter("Made by EmerqldWither");
                             event.replyEmbeds(embedBuilder.build()).setEphemeral(true).queue();
                         }
