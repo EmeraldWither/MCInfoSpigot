@@ -152,7 +152,7 @@ public class Database {
                 updateServerName.setString(1, MCInfo.getFileConfig().getString("server-name"));
                 updateServerName.executeUpdate();
 
-                String sqlUpdateTPS = "update serverinfo set serverName = ?;";
+                String sqlUpdateTPS = "update serverinfo set tps = ?;";
                 PreparedStatement updateTPS = connection.prepareStatement(sqlUpdateTPS);
                 updateTPS.setInt(1, (int)Bukkit.getTPS()[0]);
                 updateTPS.executeUpdate();
