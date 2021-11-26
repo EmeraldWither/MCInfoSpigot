@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class Database {
@@ -185,7 +186,7 @@ public class Database {
             if (getConnection() == null || getConnection().isClosed()) {
                 openConnection();
             }
-            Connection connection = getConnection();
+            Connection connection = this.connection;
             String sqlcreateTable = "create table if not exists serverinfo(onlinePlayers integer(7), maxPlayers integer(10), isOnline boolean, mcVersion varchar(7), tps integer(3), serverName varchar(1000));";
             String sqlins = "insert into serverinfo(onlinePlayers, maxPlayers, isOnline, mcVersion, tps, serverName) values(?, ?, ?, ?, ?, ?);";
             String sqlSelect = "SELECT * from serverinfo";
@@ -193,7 +194,6 @@ public class Database {
             // Create table
             PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
             stmt.execute();
-
 
             PreparedStatement stmt2 = connection.prepareStatement(sqlSelect);
             ResultSet results = stmt2.executeQuery();
@@ -219,6 +219,42 @@ public class Database {
 
         } catch (SQLException e) {
             Bukkit.getLogger().log(Level.SEVERE, " A database error has occurred!");
+            e.printStackTrace();
+        }
+    }
+    public void executeAdminCommands(){
+        try {
+            if (getConnection() == null || getConnection().isClosed()) {
+                openConnection();
+            }
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS commands(commandID varchar(200), command varchar(1000));";
+            String selectCommands = "SELECT * FROM commands";
+            String deleteCommand = "DELETE FROM commands WHERE commandID = ?;";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+            PreparedStatement getCommands = connection.prepareStatement(selectCommands);
+            ResultSet commands = getCommands.executeQuery();
+            while (commands.next()){
+                String commandID = commands.getString(1);
+                String command = commands.getString(2);
+                Bukkit.getScheduler().runTask(MCInfo.getProvidingPlugin(MCInfo.class), () -> {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                    //Bukkit.getLogger().log(Level.INFO, "Dispatched command: " + command);
+                });
+                PreparedStatement deleteCommandStatement = connection.prepareStatement(deleteCommand);
+                deleteCommandStatement.setString(1, commandID);
+                deleteCommandStatement.executeUpdate();
+
+            }
+            closeConnection();
+        }
+        catch (SQLException e){
+            System.out.println("A database error has occurred!");
+            closeConnection();
             e.printStackTrace();
         }
     }

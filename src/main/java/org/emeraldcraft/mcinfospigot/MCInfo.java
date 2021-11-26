@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -37,6 +36,7 @@ public final class MCInfo extends JavaPlugin {
         return database;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
@@ -86,19 +86,14 @@ public final class MCInfo extends JavaPlugin {
         }
         // Plugin startup logic
 
-        Bukkit.getServer().getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                chat("The server has come online!", Color.GREEN);
-                MCInfo.getDatabase().updateServerInfo(true);
-                Bukkit.getScheduler().scheduleAsyncRepeatingTask(MCInfo.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        MCInfo.getDatabase().updateTPS(true);
-                    }
-                }, 1, (10 * 20));
-            }
+        Bukkit.getServer().getScheduler().runTask(this, () -> {
+            chat("The server has come online!", Color.GREEN);
+            MCInfo.getDatabase().updateServerInfo(true);
+            Bukkit.getScheduler().scheduleAsyncRepeatingTask(MCInfo.this, () -> MCInfo.getDatabase().updateTPS(true), 1, (10 * 20));
         });
+        if(getConfig().getBoolean("javafxgui.enabled")){
+            Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, () -> MCInfo.getDatabase().executeAdminCommands(), getConfig().getInt("javafxgui.command-check-delay") * 20L, 5 * 20);
+        }
 
 
 
@@ -134,13 +129,13 @@ public final class MCInfo extends JavaPlugin {
                     channel.sendMessageEmbeds(embedBuilder.build()).queue();
                     return;
                 }
-                String roleID = getFileConfig().getString("roleid");;
+                String roleID = getFileConfig().getString("roleid");
                 if(roleID == null){
                     Bukkit.getLogger().log(Level.SEVERE, "Your roleID is incorrect. Unable to send the message.");
                 }
+                assert roleID != null;
                 MessageBuilder messageBuilder = new MessageBuilder(Objects.requireNonNull(channel.getGuild().getRoleById(roleID)).getAsMention()).setEmbeds(embedBuilder.build());
                 Bukkit.getLogger().log(Level.SEVERE, "THE ROLE ID IS NOT = 0. SENDING IT AS PING");
-                assert roleID != null;
                 channel.sendMessage(messageBuilder.build()).mentionRoles(roleID).queue();
                 break;
             }

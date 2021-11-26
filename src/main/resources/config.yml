@@ -9,6 +9,7 @@ bot-logs-channel: "bot-logs"
 #mc-execute-enabled: Determines if users can use /mcserver execute <command> and run any command as console.
 mcexecute-enabled: false
 
+
 # The bot can automatically ping people when players leave/join and on server startup/shutdown.
 # Put as 0 for it to not auto ping people
 roleid: 0
@@ -21,3 +22,9 @@ mysql:
   database-name: "McINFO"
   database-username: "root"
   database-password: "password"
+
+#Enables use of the javafx gui to use some custom data.
+javafxgui:
+    enabled: false
+    #The amount of time that the database should wait for before attempting to check commands from the GUI admin.
+    command-check-delay: 5
