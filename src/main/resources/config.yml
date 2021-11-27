@@ -28,3 +28,5 @@ javafxgui:
     enabled: false
     #The amount of time that the database should wait for before attempting to check commands from the GUI admin.
     command-check-delay: 5
+    #Wether to send console messages to the GUI
+    send-log-messages: true

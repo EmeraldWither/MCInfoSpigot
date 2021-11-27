@@ -15,6 +15,7 @@ public class Database {
     private String password;
     private Connection connection;
     private boolean isEnabled = false;
+    private int internalLogID = 1;
     public Database(String url, Integer port, String name , String username, String password){
         this.url = url;
         this.name = name;
@@ -250,7 +251,31 @@ public class Database {
                 deleteCommandStatement.executeUpdate();
 
             }
+        }
+        catch (SQLException e){
+            System.out.println("A database error has occurred!");
             closeConnection();
+            e.printStackTrace();
+        }
+    }
+    public void sendLogMessage(String msg){
+        try {
+            if (getConnection() == null || getConnection().isClosed()) {
+                openConnection();
+            }
+            Connection connection = getConnection();
+            String sqlcreateTable = "CREATE TABLE IF NOT EXISTS logs(logID integer(100), logMessage varchar(10000));";
+            String insertLog = "INSERT INTO logs VALUES (?, ?);";
+
+            // Create table
+            PreparedStatement stmt = connection.prepareStatement(sqlcreateTable);
+            stmt.executeUpdate();
+
+            PreparedStatement insertLogStatement = connection.prepareStatement(insertLog);
+            insertLogStatement.setInt(1, internalLogID);
+            insertLogStatement.setString(2, msg);
+            insertLogStatement.executeUpdate();
+            internalLogID++;
         }
         catch (SQLException e){
             System.out.println("A database error has occurred!");

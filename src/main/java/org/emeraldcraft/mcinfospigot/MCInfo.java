@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +22,7 @@ import org.emeraldcraft.mcinfospigot.Listeners.Bukkit.PlayerLeaveJoinListener;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.DiscordChat;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.GuildMemberChangeVoiceChannel;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.McExecuteCommand;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
@@ -31,6 +34,8 @@ public final class MCInfo extends JavaPlugin {
 
     private static Database database;
     private static JDA bot;
+    private Logger logger;
+    private static McINFOCustomLogAppender customLogger;
 
     public static Database getDatabase() {
         return database;
@@ -39,6 +44,8 @@ public final class MCInfo extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        // Plugin startup logic
+
         this.saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(new PlayerLeaveJoinListener(), this);
         this.getCommand("dc").setExecutor(new PlayerDiscordChat());
@@ -84,8 +91,6 @@ public final class MCInfo extends JavaPlugin {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        // Plugin startup logic
-
         Bukkit.getServer().getScheduler().runTask(this, () -> {
             chat("The server has come online!", Color.GREEN);
             MCInfo.getDatabase().updateServerInfo(true);
@@ -93,6 +98,11 @@ public final class MCInfo extends JavaPlugin {
         });
         if(getConfig().getBoolean("javafxgui.enabled")){
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, () -> MCInfo.getDatabase().executeAdminCommands(), getConfig().getInt("javafxgui.command-check-delay") * 20L, 5 * 20);
+            if(getConfig().getBoolean("javafxgui.send-log-messages"))
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    logger = (Logger) LogManager.getRootLogger();
+                    logger.addAppender(new McINFOCustomLogAppender());
+                }, 5 * 20);
         }
 
 
@@ -101,6 +111,8 @@ public final class MCInfo extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Plugin shutdown logic
+        customLogger.setEnabled(false);
         if(Bukkit.isStopping()) {
             Bukkit.getScheduler().cancelTasks(this);
             chat("Server is shutting down!", Color.RED);
@@ -111,7 +123,6 @@ public final class MCInfo extends JavaPlugin {
             }
             Bukkit.getLogger().log(Level.INFO, "Everything shutoff correctly.");
         }
-        // Plugin shutdown logic
     }
     public static JDA getBot(){
         return bot;
@@ -141,6 +152,16 @@ public final class MCInfo extends JavaPlugin {
             }
         }
     }
+    public static void setCustomLogger(@NotNull McINFOCustomLogAppender customLogger){
+        if(MCInfo.customLogger == null){
+            MCInfo.customLogger = customLogger;
+        }
+    }
+
+    public static McINFOCustomLogAppender getCustomLogger() {
+        return customLogger;
+    }
+
     public static FileConfiguration getFileConfig(){
         return JavaPlugin.getPlugin(MCInfo.class).getConfig();
     }
