@@ -3,7 +3,7 @@ bot-token: "coolbottoken"
 server-name: "My Cool Minecraft Server"
 # Bot-channel - Which channel should the bot alert server activity.
 bot-channel : "bots"
-#bot-logs - The channel where the bots will post any kind of logs.
+#bot-logs - The channel where the bots will post any kind of logs. If there are multiple channels, then it will send it in all of them.
 bot-logs-channel: "bot-logs"
 
 #mc-execute-enabled: Determines if users can use /mcserver execute <command> and run any command as console.

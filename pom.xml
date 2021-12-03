@@ -6,7 +6,7 @@
 
     <groupId>org.emeraldcraft.mcinfospigot</groupId>
     <artifactId>McInfoSpigot</artifactId>
-    <version>1.0-BETA</version>
+    <version>1.1-STABLE</version>
     <packaging>jar</packaging>
 
     <name>McInfoSpigot</name>
@@ -38,7 +38,6 @@
                     <configuration>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
-                        <finalName>${name}-${version}</finalName>
                         <outputFile>${name}-${version}.jar</outputFile>
                     </configuration>
                 </execution>
@@ -80,6 +79,12 @@
             <artifactId>JDA</artifactId>
             <version>4.3.0_346</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

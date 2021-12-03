@@ -69,6 +69,8 @@ public final class MCInfo extends JavaPlugin {
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();
+            Bukkit.getPluginManager().disablePlugin(MCInfo.this);
+            return;
         }
         boolean foundCommand = false;
         for (Command command : bot.retrieveCommands().complete()) {
@@ -79,7 +81,7 @@ public final class MCInfo extends JavaPlugin {
         }
 
         if(!foundCommand) {
-            System.out.println("Had to upsert a command.");
+            Bukkit.getLogger().log(Level.INFO, "Had to upsert the command.");
             bot.upsertCommand("mcserver", "Minecraft Server command.")
                     .addSubcommands(new SubcommandData("info", "Get information about the minecraft server."))
                     .addSubcommands(new SubcommandData("execute", "Execute a minecraft server command").addOption(OptionType.STRING, "command", "The command that you want to run", true))
@@ -99,6 +101,7 @@ public final class MCInfo extends JavaPlugin {
         if(getConfig().getBoolean("javafxgui.enabled")){
             Bukkit.getScheduler().scheduleAsyncRepeatingTask(this, () -> MCInfo.getDatabase().executeAdminCommands(), getConfig().getInt("javafxgui.command-check-delay") * 20L, 5 * 20);
             if(getConfig().getBoolean("javafxgui.send-log-messages"))
+                Bukkit.getLogger().log(Level.INFO, "JavaFXGUI log messages enabled. I will now send the console messages to the GUI.");
                 Bukkit.getScheduler().runTaskLater(this, () -> {
                     logger = (Logger) LogManager.getRootLogger();
                     logger.addAppender(new McINFOCustomLogAppender());
@@ -136,19 +139,17 @@ public final class MCInfo extends JavaPlugin {
                         embedBuilder.setTitle(msg);
                         embedBuilder.setFooter("Made by EmerqldWither");
                 if(Objects.requireNonNull(getFileConfig().getString("roleid")).equalsIgnoreCase("0")){
-                    Bukkit.getLogger().log(Level.SEVERE, "THE ROLE ID = 0. SENDING IT AS NORMAL");
                     channel.sendMessageEmbeds(embedBuilder.build()).queue();
                     return;
                 }
                 String roleID = getFileConfig().getString("roleid");
                 if(roleID == null){
-                    Bukkit.getLogger().log(Level.SEVERE, "Your roleID is incorrect. Unable to send the message.");
+                    Bukkit.getLogger().log(Level.SEVERE, "Your RoleID is incorrect. Unable to send the message as a ping.");
+                    channel.sendMessageEmbeds(embedBuilder.build()).queue();
                 }
                 assert roleID != null;
                 MessageBuilder messageBuilder = new MessageBuilder(Objects.requireNonNull(channel.getGuild().getRoleById(roleID)).getAsMention()).setEmbeds(embedBuilder.build());
-                Bukkit.getLogger().log(Level.SEVERE, "THE ROLE ID IS NOT = 0. SENDING IT AS PING");
                 channel.sendMessage(messageBuilder.build()).mentionRoles(roleID).queue();
-                break;
             }
         }
     }

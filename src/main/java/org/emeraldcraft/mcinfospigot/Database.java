@@ -30,17 +30,17 @@ public class Database {
             this.openConnection();
             if(getConnection() != null && !getConnection().isClosed()){
 
-                System.out.println("Test database connection successful! You are good to go!");
+                Bukkit.getLogger().log(Level.INFO, "Test database connection successful! You are good to go!");
                 isEnabled = true;
                 return;
             }
             isEnabled = false;
-            System.out.println("There was a problem while opening up the database connection. ");
+            Bukkit.getLogger().log(Level.INFO, "There was a problem while opening up the database connection. ");
             Bukkit.getPluginManager().disablePlugin(JavaPlugin.getProvidingPlugin(MCInfo.class));
         } catch (SQLException e) {
             e.printStackTrace();
             isEnabled = false;
-            System.out.println("There was a problem while opening up the database connection. ");
+            Bukkit.getLogger().log(Level.INFO, "There was a problem while opening up the database connection. ");
             Bukkit.getPluginManager().disablePlugin(JavaPlugin.getProvidingPlugin(MCInfo.class));
         }
     }
@@ -253,7 +253,7 @@ public class Database {
             }
         }
         catch (SQLException e){
-            System.out.println("A database error has occurred!");
+            Bukkit.getLogger().log(Level.INFO, "A database error has occurred!");
             closeConnection();
             e.printStackTrace();
         }
@@ -278,7 +278,7 @@ public class Database {
             internalLogID++;
         }
         catch (SQLException e){
-            System.out.println("A database error has occurred!");
+            Bukkit.getLogger().log(Level.INFO, "A database error has occurred!");
             closeConnection();
             e.printStackTrace();
         }
