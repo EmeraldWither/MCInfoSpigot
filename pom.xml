@@ -38,7 +38,7 @@
                     <configuration>
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <createDependencyReducedPom>false</createDependencyReducedPom>
-                        <outputFile>${name}-${version}.jar</outputFile>
+                        <outputFile>target/${name}-${version}.jar</outputFile>
                     </configuration>
                 </execution>
             </executions>
