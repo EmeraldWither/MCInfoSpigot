@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.*;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class Database {
@@ -25,8 +24,6 @@ public class Database {
     }
     public void testConnection() throws SQLException {
         try {
-            //Class.forName("com.mysql.cj.jdbc.Driver");
-
             this.openConnection();
             if(getConnection() != null && !getConnection().isClosed()){
 
@@ -68,42 +65,6 @@ public class Database {
         }
     }
 
-    //Getter and Setters
-    public String getUrl(){
-        return url;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
     public Connection getConnection(){
         return this.connection;
     }
@@ -151,7 +112,7 @@ public class Database {
 
                 String sqlUpdateServerName = "update serverinfo set serverName = ?;";
                 PreparedStatement updateServerName = connection.prepareStatement(sqlUpdateServerName);
-                updateServerName.setString(1, MCInfo.getFileConfig().getString("server-name"));
+                updateServerName.setString(1, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
                 updateServerName.executeUpdate();
 
                 String sqlUpdateTPS = "update serverinfo set tps = ?;";
@@ -169,7 +130,7 @@ public class Database {
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
                 stmt3.setInt(5, (int)Bukkit.getTPS()[0]);
-                stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
+                stmt3.setString(6, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }
 
@@ -214,7 +175,7 @@ public class Database {
                 stmt3.setBoolean(3, isOnline);
                 stmt3.setString(4, mcVersion);
                 stmt.setInt(5, (int)Bukkit.getTPS()[0]);
-                stmt3.setString(6, MCInfo.getFileConfig().getString("server-name"));
+                stmt3.setString(6, JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("server-name"));
                 stmt3.executeUpdate();
             }
 

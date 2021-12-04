@@ -8,12 +8,19 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.mcinfospigot.Bot;
 import org.emeraldcraft.mcinfospigot.MCInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class PlayerDiscordChat implements CommandExecutor {
+    private Bot bot;
+
+    public PlayerDiscordChat(Bot bot) {
+        this.bot = bot;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         String prefix = ChatColor.BLUE + "[Discord] ";
@@ -33,7 +40,7 @@ public class PlayerDiscordChat implements CommandExecutor {
             stringBuilder.append(" ").append(args[arg]);
         }
         String msg = "[SERVER CHAT] " + sender.getName() + ": " +  stringBuilder;
-        List<TextChannel> textChannels = MCInfo.getBot().getTextChannels();
+        List<TextChannel> textChannels = bot.getBot().getTextChannels();
 
         for(TextChannel textChannel : textChannels){
             if(textChannel.getName().equalsIgnoreCase(JavaPlugin.getPlugin(MCInfo.class).getConfig().getString("bot-channel"))){

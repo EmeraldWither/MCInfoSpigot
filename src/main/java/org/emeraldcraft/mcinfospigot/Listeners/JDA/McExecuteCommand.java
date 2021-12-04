@@ -8,18 +8,24 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.mcinfospigot.Bot;
 import org.emeraldcraft.mcinfospigot.MCInfo;
 
 import java.awt.*;
 import java.util.Objects;
 
 public class McExecuteCommand extends ListenerAdapter {
+    private Bot bot;
+
+    public McExecuteCommand(Bot bot) {
+        this.bot = bot;
+    }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event){
         if(event.getSubcommandName() != null) {
             if (event.getSubcommandName().equalsIgnoreCase("execute")) {
-                if(!MCInfo.getFileConfig().getBoolean("mcexecute-enabled")){
+                if(!JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getBoolean("mcexecute-enabled")){
                     Bukkit.getScheduler().runTask(JavaPlugin.getProvidingPlugin(MCInfo.class), () -> {
                         EmbedBuilder embedBuilder = new EmbedBuilder();
                         embedBuilder.setAuthor(JavaPlugin.getPlugin(MCInfo.class).getConfig().getString("server-name"));
@@ -42,8 +48,8 @@ public class McExecuteCommand extends ListenerAdapter {
                     Bukkit.broadcastMessage(ChatColor.BLUE + "[Discord] " + ChatColor.DARK_AQUA + "User '" + net.md_5.bungee.api.ChatColor.of(color) + event.getUser().getName() + ChatColor.DARK_AQUA + "' has executed the command '" + event.getOption("command").getAsString() + "'!");
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), event.getOption("command").getAsString());
                 });
-                for (TextChannel textChannel : MCInfo.getBot().getTextChannels()) {
-                    if (textChannel.getName().equalsIgnoreCase(MCInfo.getFileConfig().getString("bot-logs-channel"))) {
+                for (TextChannel textChannel : bot.getBot().getTextChannels()) {
+                    if (textChannel.getName().equalsIgnoreCase(JavaPlugin.getProvidingPlugin(MCInfo.class).getConfig().getString("bot-logs-channel"))) {
                         textChannel.sendMessage("User **'" + event.getUser().getName() + "'** has executed the command **'" + Objects.requireNonNull(event.getOption("command")).getAsString() + "'**!").queue();
                         break;
                     }
