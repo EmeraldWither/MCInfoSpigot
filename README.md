@@ -14,3 +14,4 @@ Features:
 - Send alerts when a server starts up and shuts down
 
 As of right now, this plugin requires the use of PaperMC.
+**REQUIRES JAVA 16 OR ABOVE. SHOULD WORK ABOVE 1.17x BUT HAS NOT BEEN TESTED!**
