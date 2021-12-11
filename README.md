@@ -1,6 +1,6 @@
 # Minecraft Server Info via Discord (Spigot plugin)
 
-Please install the spigot plugin: https://github.com/EmeraldWither/MCInfoStandalone
+Please install and run the standalone program: https://github.com/EmeraldWither/MCInfoStandalone
 
 This bot allows you to be able to query data about a server directly from discord!
 
