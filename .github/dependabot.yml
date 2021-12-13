@@ -1,6 +1,6 @@
 version: 2
 updates:
-    # Enable version updates for Gradle
+    # Enable version updates for Maven
     - package-ecosystem: "maven"
       # Look for `pom.xml` in the `root` directory
       directory: "/"
