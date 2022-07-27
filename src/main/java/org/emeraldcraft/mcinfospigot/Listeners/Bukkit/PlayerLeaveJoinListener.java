@@ -20,22 +20,16 @@ public class PlayerLeaveJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(MCInfo.class), new Runnable() {
-            @Override
-            public void run() {
-                bot.chat("**" + event.getPlayer().getName() +  "** has joined the server!", Color.GREEN);
-                bot.getDatabase().updateServerInfo(true);
-            }
+        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(MCInfo.class), () -> {
+            bot.chat("**" + event.getPlayer().getName() +  "** has joined the server!", Color.GREEN);
+            bot.getDatabase().updateServerInfo(true);
         });
     }
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event){
-        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(MCInfo.class), new Runnable() {
-            @Override
-            public void run() {
-                bot.chat("**" + event.getPlayer().getName() +  "** has left the server!", Color.RED);
-                bot.getDatabase().updateServerInfo(true);
-            }
+        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(MCInfo.class), () -> {
+            bot.chat("**" + event.getPlayer().getName() +  "** has left the server!", Color.RED);
+            bot.getDatabase().updateServerInfo(true);
         });
     }
 }

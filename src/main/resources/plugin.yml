@@ -8,3 +8,4 @@ description: The bridge needed for the McINFO bot to work.
 commands:
   dc:
   discordchat:
+  toggledc:

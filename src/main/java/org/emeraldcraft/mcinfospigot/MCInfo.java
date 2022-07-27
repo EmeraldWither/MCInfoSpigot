@@ -13,8 +13,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.emeraldcraft.mcinfospigot.Listeners.Bukkit.PlayerChatListener;
 import org.emeraldcraft.mcinfospigot.Listeners.Bukkit.PlayerDiscordChat;
 import org.emeraldcraft.mcinfospigot.Listeners.Bukkit.PlayerLeaveJoinListener;
+import org.emeraldcraft.mcinfospigot.Listeners.Bukkit.PlayerToggleDiscordChat;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.DiscordChat;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.GuildMemberChangeVoiceChannel;
 import org.emeraldcraft.mcinfospigot.Listeners.JDA.McExecuteCommand;
@@ -86,8 +88,10 @@ public final class MCInfo extends JavaPlugin {
                 }, 5 * 20);
             }
             Bukkit.getPluginManager().registerEvents(new PlayerLeaveJoinListener(botClass), this);
+            Bukkit.getPluginManager().registerEvents(new PlayerChatListener(botClass), this);
             this.getCommand("dc").setExecutor(new PlayerDiscordChat(botClass));
             this.getCommand("discordchat").setExecutor(new PlayerDiscordChat(botClass));
+            this.getCommand("toggledc").setExecutor(new PlayerToggleDiscordChat(botClass));
             bot.addEventListener(new McExecuteCommand(botClass), new DiscordChat(), new GuildMemberChangeVoiceChannel());
 
         } catch (LoginException e) {
@@ -98,16 +102,18 @@ public final class MCInfo extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if(botClass.getCustomLogAppender() != null)
+            botClass.getCustomLogAppender().setEnabled(false);
+
         // Plugin shutdown logic
-        botClass.getCustomLogAppender().setEnabled(false);
         if(Bukkit.isStopping()) {
-            Bukkit.getScheduler().cancelTasks(this);
             botClass.chat("Server is shutting down!", Color.RED);
             botClass.getDatabase().updateServerInfo(false);
             botClass.getDatabase().closeConnection();
             if(botClass.getBot() != null){
-                botClass.getBot().shutdownNow();
+                botClass.getBot().shutdown();
             }
+            Bukkit.getScheduler().cancelTasks(this);
             Bukkit.getLogger().log(Level.INFO, "Everything shutoff correctly.");
         }
     }
