@@ -6,7 +6,7 @@
 
     <groupId>org.emeraldcraft.mcinfospigot</groupId>
     <artifactId>McInfoSpigot</artifactId>
-    <version>1.1.1-STABLE</version>
+    <version>1.1.2-STABLE</version>
     <packaging>jar</packaging>
 
     <name>McInfoSpigot</name>
