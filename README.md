@@ -12,11 +12,10 @@ Features:
 - Show messages on the minecraft server on discord 
 - Send alerts when players leave or quit the server
 - Send alerts when a server starts up and shuts down
+- /toggledc command to be able to reroute all chat messages to discord! (per player)
 
-As of right now, this plugin requires the use of PaperMC.
 
-**REQUIRES A MYSQL COMPATIBLE DATABASE**
+Depenencies:
+ - MySQL compatiable database
+ - PaperMC (1.18 or higher)
 
-**THIS PLUGIN DOES REQUIRE THE USE OF PAPERMC FOR TPS INFORMATION**
-
-**REQUIRES JAVA 16 OR ABOVE. SHOULD WORK ABOVE 1.17x BUT HAS NOT BEEN TESTED!**
